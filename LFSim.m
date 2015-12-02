@@ -86,21 +86,47 @@ sensorPixel_orig = sensorPixel;
 eye_depth = 200;
 % find the shearing amount
 [shearx,sheary] = intersection(0,0,pinhole(:,1),pinhole(:,2),...
-        abs(eye_depth-pinhole_z),abs(eye_depth-LCD_z));
+    eye_depth-pinhole_z,eye_depth-LCD_z);
 shearshiftx = shearx-sensorPixel((sensorpixel_block+1)/2:...
     sensorpixel_block:end,2);
 shearshifty = sheary-sensorPixel((sensorpixel_block+1)/2:...
     sensorpixel_block:end,3);
+
+% number of black pixels needed to be added
+rel_num_blackx = sign(shearshiftx/sensorPixel_pitch).*...
+    floor(abs(shearshiftx/sensorPixel_pitch));
+rel_num_blacky = sign(shearshifty/sensorPixel_pitch).*...
+    floor(abs(shearshifty/sensorPixel_pitch));
+rel_matx = transpose(reshape(rel_num_blackx',Num_pinhole,Num_pinhole));
+rel_maty = transpose(reshape(rel_num_blacky',Num_pinhole,Num_pinhole));
+
+abs_matx = rel_matx;
+abs_matx(:,1:Num_pinhole/2-1) = rel_matx(:,1:Num_pinhole/2-1)-...
+    rel_matx(:,2:Num_pinhole/2);
+abs_matx(:,Num_pinhole/2+1:end) = rel_matx(:,Num_pinhole/2+1:end)-...
+    rel_matx(:,Num_pinhole/2:end-1);
+insert_posx = find(abs_matx(1,:)>0);
+insert_negx = sort(find(abs_matx(1,:)<0),'descend');
+
+abs_maty = rel_maty;
+abs_maty(1:Num_pinhole/2-1,:) = rel_maty(1:Num_pinhole/2-1,:)-...
+    rel_maty(2:Num_pinhole/2,:);
+abs_maty(Num_pinhole/2+1:end,:) = rel_maty(Num_pinhole/2+1:end,:)-...
+    rel_maty(Num_pinhole/2:end-1,:);
+insert_posy = sort(find(abs_maty(:,1)>0),'descend');
+insert_negy = find(abs_maty(:,1)<0);
+
 shearshiftx_mat = repmat(shearshiftx',sensorpixel_block,1);
 shearshiftx_vec = reshape(shearshiftx_mat,numel(shearshiftx_mat),1);
 shearshifty_mat = repmat(shearshifty',sensorpixel_block,1);
 shearshifty_vec = reshape(shearshifty_mat,numel(shearshifty_mat),1);
 shearshift = [shearshiftx_vec,shearshifty_vec];
+sensorPixel = sensorPixel_orig;
 sensorPixel(:,2:3) = sensorPixel(:,2:3)+shearshift;
 
 %% LCD Simulator
 % object depth
-obj_z_vec = [-20];
+obj_z_vec = [20];
 
 corner_LCD = sensorPixel(1,2);
 corner_LCD2 = sensorPixel(Num_sensorPixel,2);
@@ -109,15 +135,10 @@ corner_pinhole = pinhole(1,1);
 for mm = 1:length(obj_z_vec)
     obj_z = obj_z_vec(mm);
     
-    % set the object size
-    corner_obj1 = intersection(corner_LCD-sensorPixel_R,0,...
-        corner_pinhole+pinhole_R,0,LCD_z-pinhole_z,LCD_z-obj_z);
-    corner_obj2 = intersection(corner_LCD2+sensorPixel_R,0,...
-        corner_pinhole-pinhole_R,0,LCD_z-pinhole_z,LCD_z-obj_z);
+    [corner_objx,corner_objy] = intersection(0,0,pinhole(1,1)-pinhole_R,0,...
+        eye_depth-pinhole_z,eye_depth-obj_z);
     
-    corner_obj = max(abs(corner_obj1),abs(corner_obj2));
-    
-    physSizex_img = 2*abs(corner_obj);
+    physSizex_img = abs(corner_objx)*2;
     physSizey_img = physSizex_img;
     
     obj_res = physSizex_img/img_sizex;
@@ -128,10 +149,6 @@ for mm = 1:length(obj_z_vec)
     obj(:,2:3) = [reshape(objx_vec',numel(objx_vec),1),...
         reshape(objy_vec',numel(objx_vec),1)];
     
-%     if(obj_z<0)
-%         obj_z = pinhole_z-obj_z+pinhole_z;
-%     end
-%     
     obj_bond = [min(obj(:,2)),max(obj(:,2));...
         min(obj(:,3)),max(obj(:,3))];
     fprintf('Defining object resolution to be %f ppi.\n',25.4/display_img_res);
@@ -143,9 +160,6 @@ for mm = 1:length(obj_z_vec)
     
     displaySensor = zeros(Num_pinhole*Num_sensorPixel,...
         Num_pinhole*Num_sensorPixel,size(imgVecTotal,2));
-    %     for channel = 1:size(imgVecTotal,2)
-    %         imgVec = imgVecTotal(:,channel);
-    %         obj(:,1) = imgVec;
     
     % LCD Simulator
     fprintf('Begin LCD Simulator.\n');
@@ -247,6 +261,46 @@ for mm = 1:length(obj_z_vec)
         clear colorAssignT
     end
     
+    orig_displaySensor = displaySensor;
+    black = zeros();
+    for ninsert = 1:length(insert_posx)
+        insert_sensor_posx = Num_sensorPixel*(insert_posx(ninsert)-1);
+        insert_sensor_negx = Num_sensorPixel*(insert_negx(ninsert));
+        insert_sensor_posy = Num_sensorPixel*(insert_posy(ninsert));
+        insert_sensor_negy = Num_sensorPixel*(insert_negy(ninsert)-1);
+        for ch = 1:3
+            displaySensor_ch = displaySensor(:,:,ch);
+            
+            displaySensor_ch(:,insert_sensor_posx+1:Num_pinhole*Num_sensorPixel) =...
+                displaySensor_ch(:,insert_sensor_posx:Num_pinhole*Num_sensorPixel-1);
+            displaySensor_ch(:,insert_sensor_posx) = ...
+                1/2*(displaySensor_ch(:,insert_sensor_posx-1)+displaySensor_ch(:,insert_sensor_posx+1));
+            
+            
+            displaySensor_ch(:,1:insert_sensor_negx-1) =...
+                displaySensor_ch(:,2:insert_sensor_negx);
+            displaySensor_ch(:,insert_sensor_negx) =...
+                1/2*(displaySensor_ch(:,insert_sensor_negx+1)+displaySensor_ch(:,insert_sensor_negx-1));
+            
+            displaySensor_ch(1:insert_sensor_posy-1,:) =...
+                displaySensor_ch(2:insert_sensor_posy,:);
+            displaySensor_ch(insert_sensor_posy,:) = 1/2*...
+                (displaySensor_ch(insert_sensor_posy-1,:)+displaySensor_ch(insert_sensor_posy+1,:));
+            
+            displaySensor_ch(insert_sensor_negy+1:Num_pinhole*Num_sensorPixel,:) =...
+                displaySensor_ch(insert_sensor_negy:Num_pinhole*Num_sensorPixel-1,:);
+            displaySensor_ch(insert_sensor_negy,:) = 1/2*...
+                (displaySensor_ch(insert_sensor_negy-1,:)+displaySensor_ch(insert_sensor_negy+1,:));
+            
+            displaySensor(:,:,ch) = displaySensor_ch;
+        end
+        insert_posx = insert_posx-1;
+        insert_negx = insert_negx+1;
+        insert_posy = insert_posy+1;
+        insert_negy = insert_negy-1;
+        
+    end
+    
     clear const_vec
     clear const_mat
     clear ind_rand
@@ -258,15 +312,15 @@ for mm = 1:length(obj_z_vec)
     clear nearK_img
     clear nearK_dis
     
-    aber_power = diopterConvert([eye_depth/1000-obj_z_vec(mm)/1000,eye_depth/1000],0);
-    namefile = sprintf('lightfield/Bunnydiopter%f.png',aber_power);
+    %aber_power = diopterConvert([eye_depth/1000-obj_z_vec(mm)/1000,eye_depth/1000],0);
+    namefile = sprintf('lightfield/BunnyLF.png');
     imwrite(displaySensor,namefile,'png')
 end
 %
 fprintf('Finish LCD simulator.\n');
 figure()
 imshow(displaySensor)
-namefig = sprintf('Projected Image displayed on the LCD plane with diopter %f.',aber_power);
+namefig = sprintf('Light field.');
 title(namefig,'fontsize',15)
 
 
