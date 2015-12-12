@@ -1,0 +1,100 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{iccp}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{graphicx}
+%\usepackage[backend=biber,style=ieee,sorting=ynt]{biblatex}
+
+\newcommand{\cecilia}[1]{\textcolor{red}{cecilia: #1}}
+\newcommand{\jinkyu}[1]{\textcolor{blue}{jinkyu: #1}}
+% for rapid builds, with bounding boxes instead of images add the [draft] option to graphicx
+% \usepackage[draft]{graphicx}
+
+%\iccpfinalcopy % *** Uncomment this line for the final submission
+
+%\addbibresource{vcd.bib}
+
+\def\iccpPaperID{****} % *** Enter the ICCP Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+\ificcpfinal\pagestyle{empty}\fi
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{Draft: v0.5}
+
+\author{
+Jinkyu Kim\\
+%{\small\url{http://www.author.org/~second}}
+\and
+Xuaner Zhang\\
+{\tt\small cecilia77@cs.berkeley.edu}
+\and
+Ren Ng\\
+%{\small\url{http://www.author.org/~second}}
+}
+
+\maketitle
+\thispagestyle{empty}
+
+%%%%%%%%% ABSTRACT
+\begin{abstract}
+   Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder. Abstract goes here. Place holder.
+\end{abstract}
+
+%%%%%%%%% Introduction
+\section{Introduction}
+\input{introduction}
+
+
+\subsection{Contributions}
+\input{contribution}
+
+
+%-------------------------------------------------------------------------
+\section{Related Work}
+\input{relatedWorks}
+
+
+%-------------------------------------------------------------------------
+\section{Designing Vision Correcting Display}
+
+\subsection{Overview}
+\input{overview}
+
+\subsection{System Design}
+\input{systemDesign}
+
+\subsection{Light Field Rendering}
+\input{capturingLF}
+
+
+%-------------------------------------------------------------------------
+\section{Analysis}
+\input{analysis}
+
+
+%-------------------------------------------------------------------------
+\section{Result}
+\input{result}
+
+
+%-------------------------------------------------------------------------
+\section{Discussion}
+\input{discussion}
+
+
+%-------------------------------------------------------------------------
+\section{Conclusion}
+
+%-------------------------------------------------------------------------
+%{\small
+\bibliographystyle{ieee}
+\bibliography{vcd}
+%}
+
+\end{document}

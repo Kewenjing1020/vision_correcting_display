@@ -1,0 +1,58 @@
+\begin{figure*}
+    \begin{center}
+        \fbox{\rule{0pt}{2in} \rule{.9\linewidth}{0pt}}
+    \end{center}
+    \caption{An system overview will be placed here}
+    \label{fig:fig1}
+\end{figure*}
+
+\subsubsection{Eye Aberration}
+An eye is in \textit{ametropic} condition when the relaxed eye fails to focus infinitely distant object on a focal point (\eg, retinal plane). The cause of ametropic includes changes in length of eyeball (\ie, distance between lens and retina) and abnormal changes in cornea or lens. Typical cases of \textit{ametropic} includes myopia (nearsightedness), hyperopia (farsightedness), presbyopia, and astigmatism.
+
+In this paper, we focus on correcting low-order aberration (myopia and hyperopia). In-depth analysis on exploring high-order aberration is explained in Section~\ref{ss:Higherorderaberration}. A myopic eye often has too strong optical power for its axial length between the crystalline lens and the retina, making parallel rays from infinite distance come to focus on a point in front of the retina. The farthest point a myopic eye can focus on the retina is referred as the far point, and any image placed beyond the far point will appear blurred. Likewise, a hyperopic eye has too weak optical power and thus has its focal point behind the retina for parallel rays from infinity. The nearest point a hyperopic eye can focus on the retina is called a near point, and any image located in front of the near point will appear blurred.
+
+\subsubsection{Correcting Low-order Eye Aberration with a fixed viewing position}
+As illustrated in Figure~\ref{fig:overview}, we use 4D dual-plane light fields $L(u,v,x,y)$ to describe light rays from the lateral image plane ($uv$-plane) to the lateral eye's pupil plane ($xy$-plane). The incident light rays would focus on retina without any correction if the image is placed at the eye's far point ($P_f$, if myopia) or near point ($P_n$, if hyperopia). The incident light rays can be calculated by integrating rays coming to the eye's pupil.
+\begin{equation}
+	I(x,y) = \iint_{\Omega} L(u,v,x,y) dudv
+\end{equation}
+where $\Omega$ is limited by eye's entrance pupil. Now, let us consider a light field display that is placed in front of the viewer; for example, farther than the eye's far point (if myopia) or closer than the eye's near point (if hyperopia). If we denote $\tilde{L}(s,t,x,y)$ as two-plane light fields from the lateral display plane ($st$-plane) and the lateral eye's pupil plane ($xy$-plane), the incident light rays $\tilde{I}(s,t,x,y)$ can be derived as follows:
+\begin{equation}
+	\tilde{I}(x,y) = \iint_{\Omega} \tilde{L}(s,t,x,y)  dsdt
+\end{equation}
+The problem of correcting low-order eye aberration with a fixed viewing position is then fomulated as to find light fields $\tilde{L}^{*}$ that minimizes the following function:
+\begin{align}
+	\tilde{L}^{*} &= \text{argmin}_{\tilde{L}} \sum_{x,y} (I(x,y)-\tilde{I}(x,y))^{2}
+\end{align}
+This problem statement is consistent with previous works of Pamplona~\etal~\cite{pamplona12} and Huang~\etal~\cite{huang14}. 
+
+
+%\begin{equation}
+%	I(x,y) = \iint L(u,v,x,y)A(x,y)  dudv
+%\end{equation}
+%where $A(x,y)$ is a binary function limited by eye's pupil size.
+%\[ A(x,y) =
+%  \begin{cases}
+%   0  & \quad \text{if $A(x,y)$ is placed inside the pupil}\\
+%   1  & \quad \text{if $A(x,y)$ is placed outside the pupil}\\
+%  \end{cases}
+%\]
+%Now, let us consider a light field display that can produce sufficient light fields, and is placed in front of the viewer: farther than the eye's far point (if myopia) or closer than the eye's near point (if hyperopia). If we denote $L'(s,t,x,y)$ as two-plane light fields from the lateral display plane ($st$-plane) and the lateral eye's pupil plane ($xy$-plane), the incident light rays $I'(s,t,x,y)$ can be derived as follows:
+%\begin{equation}
+%	I'(x,y) = \iint L'(s,t,x,y)A(x,y)  dsdt
+%\end{equation}
+
+%The problem of correcting low-order eye aberration with a fixed viewing position is then to find light fields $L'$ that minimizes $|I(x,y)-I'(x,y)|$ for any light rays coming to the eye's pupil. This problem statement is consistent with previous works of Pamplona~\etal~\cite{pamplona12} and Huang~\etal~\cite{huang14}. 
+
+\subsubsection{Correcting Low-order Eye Aberration within viewing zone}
+Now, let us consider the eye is moving in lateral direction on the pupil plane by $(\Delta x, \Delta y) \in R$, where  $R$ is the space satisfying following condition: $w_e/2 \leq \Delta x, \Delta y \leq  w_e/2$. We denote $w_e$ as the width of viewing zone where the viewer can freely move and see an displayed image without any reduction of perceived image quality. Now, the problem can be stated by finding light fields $\tilde{L}^{*}$ that minimizes the following function:
+\begin{equation}
+	\tilde{L}^{*} = \text{argmin}_{\tilde{L}} \sum_{R}\sum_{x,y} (I_{\Delta x, \Delta y}(x,y)-\tilde{I}_{\Delta x, \Delta y}(x,y))^{2}
+\end{equation}
+where $I_{\Delta x, \Delta y}(x,y)$ is $I(x-\Delta x,y-\Delta y)$.
+
+
+
+
+
+

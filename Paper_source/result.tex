@@ -1,0 +1,10 @@
+\subsection{Retinal Image Simulation}
+To demonstrate the effect of the proposed method, we implemented a retinal image simulator that constructs a projection matrix between pixels on display and sampled sensor points on retina based on ray-tracing. To this end, we employed the model of Seidel aberration~\cite{wyant92} to calculate transverse aberration as follows:
+\begin{equation}
+\epsilon_x = -\frac{R}{n'e'}W_{020}\rho_x,~~ \epsilon_y = -\frac{R}{n'e'}W_{020}\rho_y
+\end{equation}
+where $n'$ is refractive index of eye, and $R$ indicates the radius of curvature of the spherical wavefront, while $e'$ denotes the semi-aperture of the exit pupil. $\rho_x$ and $\rho_y$ represent the exit pupil coordinates represented in polar coordinates. Depending on the level of optical defocus aberration, $W_{020}$ can be determined. (For more details, see \cite{wyant92})
+
+
+\subsection{Eye movement-free correction}
+

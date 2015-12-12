@@ -1,0 +1,19 @@
+\begin{figure*}
+    \begin{center}
+    \fbox{\rule{0pt}{2in} \rule{.9\linewidth}{0pt}}
+    \end{center}
+    \caption{Intro figure goes here}
+    \label{fig:intro}
+\end{figure*}
+
+The era of an unprecedented ''myopic boom''~\cite{dolgin2015myopia} has been triggered around the world by a variety of environmental and behavioral factors. Half of young adult in the United States and Europe suffer from myopia, while up to 90\% of Chinese teenagers and young adults are shortsighted~\cite{dolgin2015myopia}. The prevalence of hyperopia has also been reported by various studies~\cite{yoo2013refractive, visionstudy}, 9.9\% and 11.6\% of populations ($\geq$40 years) respectively in the United States and Western European have hyperopia. 
+
+Optical corrections (\ie, eyeglasses and contact lenses) have been primary options to correct eye's refractive errors. However, these corrections often cause inconvenience when people have to put them on and off based on their needs (\ie a person with hyperopia has to put on glasses whenever he/she wants to check time on a mobile phone). 
+
+%Recent research~\cite{pamplona12,Huang:EECS-2011-162,huang14} has opened up a novel direction for computational vision correction: instead of correcting eye aberration from the viewer side, we could customize and correct the display to make it aberration compensated. When eye with defocus errors (\ie myopia and hyperopia) try to focus on a display outside its focal limit, their real focal planes lay closer (for myopia persons) or further (for hyperopia persons) than the display plane. If we could digitally refocus planes to the right position, which, in this case is the display plane, defocus could be corrected and viewers see the display in focus. Digital refocusing~\cite{ng2005light} and correction of lens aberration~\cite{ng2007digital} have been proposed for light field photography; similar idea to manipulate light field through ray tracing can be applied to build aberration compensated glassless light field displays. Previous works\cite{pamplona12,Huang:EECS-2011-162} have designed light field displays for vision correction, but their systems are view-dependent and undesired artifacts appear when the viewing point changes. In our system design, we account for eye movement so that the viewer is able to freely move within a viewing zone to see an aberration compensated display.
+
+To alleviate this inconvenience, various techniques have been proposed [REF!], and recent works~\cite{pamplona12,Huang:EECS-2011-162,huang14} have opened up a novel direction for computational vision correction. These methods aim for manipulation of 4D light fields emitted by displays, while compensating optical eye aberration. However, there still remain concerns such as strong requirements that viewers should be placed in fixed viewing positions, otherwise undesired degradation of correction quality will be observed.
+
+Here, we propose a novel framework for vision-correcting display that allows freedom in eye movements in the user-specified viewing zone, providing continuous viewing environment. Inspired by the idea of digital refocusing~\cite{ng2005light}, 4D light fields coming to the viewing zone from the virtual plane are rendered and displayed through light field displays. The location of virtual plane is determined by where images come to focus on retinal plane for myopic and hyperopic eyes.
+
+The rest of the paper is organized as following: in the next section, we will have a review of light field display and its application to vision correction. Then we present general vision correcting display design and our proposed design. An analysis regarding viewing zone, limitation of defocus correction and display resolution is discussed afterwards. Then we show some simulation results with discussion and future work at the end.
